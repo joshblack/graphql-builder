@@ -1,6 +1,5 @@
 import * as t from 'babel-types';
 import { isPlainObject } from 'lodash';
-import generate from 'babel-generator';
 import invariant from 'fbjs/lib/invariant';
 
 import { createGraphQLPrimitive } from './createGraphQLPrimitive';
@@ -107,26 +106,17 @@ export default class GraphQLBuilder {
   get schema() {
     const types = Object.keys(this._moduleMap)
       .map((key) => {
-        const { definition, dependencies } = this._moduleMap[key];
+        const { name, definition, dependencies } = this._moduleMap[key];
 
-        return t.Program([
-          ...createImportSpecifiers({ dependencies }),
-          t.exportNamedDeclaration(definition, []),
-        ]);
+        return {
+          name,
+          program: t.Program([
+            ...createImportSpecifiers({ dependencies }),
+            t.exportNamedDeclaration(definition, []),
+          ]),
+        };
       });
 
     return types;
-  }
-
-  generateSchema() {
-    const files = this.schema.map((type) => {
-      const { code } = generate(type, {
-        quotes: 'single'
-      });
-
-      return code;
-    });
-
-    return files;
   }
 }

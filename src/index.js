@@ -1,8 +1,8 @@
+import path from 'path';
 import faker from 'faker';
 import GraphQLBuilder from './builders/GraphQLBuilder';
+import { scaffold } from './scaffold';
 
-const response = {
-  creditCard: faker.helpers.createCard(),
   // user: {
     // friends: [user]
     // name: faker.name.findName(),
@@ -13,12 +13,14 @@ const response = {
       // },
     // },
   // },
+
+const response = {
+  creditCard: faker.helpers.createCard(),
 };
 
-const visitor = new GraphQLBuilder(response);
-const schema = visitor.generateSchema();
+console.log(response.creditCard);
 
-schema.forEach((file) => {
-  console.log(file);
-});
+const visitor = new GraphQLBuilder(response);
+
+scaffold(visitor.schema, path.resolve(__dirname, '../project'));
 
