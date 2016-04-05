@@ -16,11 +16,30 @@ import { scaffold } from './scaffold';
 
 const response = {
   creditCard: faker.helpers.createCard(),
+  // user: {
+    // name: 'josh',
+    // bar: ['a', 'b', 'c'],
+  // },
 };
+console.log(JSON.stringify(response, null, 2));
+// const visitor = new GraphQLBuilder(response);
 
-console.log(response.creditCard);
+// import generate from 'babel-generator';
+// const files = visitor.schema.map((type) => {
+  // const { name, program } = type;
+  // const { code } = generate(program, {
+    // quotes: 'single'
+  // });
 
-const visitor = new GraphQLBuilder(response);
+  // return {
+    // name,
+    // source: code,
+  // };
+// });
 
-scaffold(visitor.schema, path.resolve(__dirname, '../project'));
+// files.forEach((file) => {
+  // console.log(file.source);
+// });
+
+// scaffold(visitor.schema, path.resolve(__dirname, '../project'));
 

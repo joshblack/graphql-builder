@@ -7,9 +7,6 @@ const emptyDirAsync = promisify(emptyDir);
 const ensureDirAsync = promisify(ensureDir);
 const writeFileAsync = promisify(writeFile);
 
-// given an AST with additional info like filename,
-// write files to a target directory
-
 export const scaffold = (types, destination) => {
   const files = types.map((type) => {
     const { name, program } = type;
@@ -23,8 +20,6 @@ export const scaffold = (types, destination) => {
     };
   });
 
-  const targetFile = path.resolve(destination, 'sample.js');
-
   ensureDirAsync(destination)
     .then(() => emptyDirAsync(destination))
     .then(() => Promise.all(
@@ -34,6 +29,5 @@ export const scaffold = (types, destination) => {
         'utf-8',
       )),
     ))
-    .then(() => console.log('done'))
     .catch((error) => console.log(error));
 };

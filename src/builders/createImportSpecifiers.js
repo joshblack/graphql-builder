@@ -8,11 +8,15 @@ export const createImportSpecifiers = ({ dependencies }) => {
     // If we already have an import from this source, and we haven't already
     // included this import, then add it to the list of imports from
     // the given source
-    if (acc[source] && acc[source].indexOf(name) === -1) {
-      return {
-        ...acc,
-        [source]: acc[source].concat(name),
-      };
+    if (acc[source]) {
+      if (acc[source].indexOf(name) === -1) {
+        return {
+          ...acc,
+          [source]: acc[source].concat(name),
+        };
+      }
+
+      return acc;
     }
 
     return {
@@ -20,7 +24,6 @@ export const createImportSpecifiers = ({ dependencies }) => {
       [source]: [name],
     };
   }, {});
-
 
   return Object.keys(imports).map((key) => t.importDeclaration(
     imports[key].map((name) => t.importSpecifier(
