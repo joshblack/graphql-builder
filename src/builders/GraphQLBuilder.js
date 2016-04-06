@@ -12,92 +12,11 @@ import {
   createGraphQLObjectReferenceField,
 } from './createGraphQLObjectReferenceField';
 
+import { listNode } from '../nodeTypes/listNode';
 import { objectNode } from '../nodeTypes/objectNode';
 import { primitiveNode } from '../nodeTypes/primitiveNode';
 
 const SOURCE_PATH = (type) => `./${type}`;
-
-const getListType = ({ moduleMap, value }) => {
-  let dependencies = [];
-  const typeList = value.reduce((acc, item) => {
-    if (isPlainObject(item)) {
-      // ObjectType
-    } else if (Array.isArray(item)) {
-      // GraphQLListType
-    } else {
-      const type = inferGraphQLScalarTypeFrom(item);
-
-      if (acc.indexOf(type) === -1) {
-        dependencies = dependencies.concat({
-          name: type,
-          source: 'graphql',
-        });
-
-        return acc.concat(type);
-      }
-    }
-
-    return acc;
-  }, []);
-  const [type] = typeList;
-
-  return {
-    type,
-    dependencies: [
-      {
-        name: 'GraphQLList',
-        source: 'graphql',
-      },
-      ...dependencies,
-    ],
-  };
-};
-
-const createGraphQLList = ({ moduleMap, name, value }) => {
-  const { type, dependencies } = getListType({ moduleMap, value });
-  const definition = t.objectProperty(
-    t.identifier(name),
-    t.objectExpression([
-      t.objectProperty(
-        t.identifier('type'),
-        t.NewExpression(
-          t.identifier('GraphQLList'),
-          [t.identifier(type)],
-        ),
-      ),
-      t.objectProperty(
-        t.identifier('description'),
-        t.stringLiteral(`Generated type for ${name}.`),
-      ),
-    ]),
-  );
-
-  return {
-    definition,
-    dependencies,
-  };
-};
-
-const listNode = ({
-  name,
-  value,
-  parent,
-  moduleMap,
-}) => {
-  const { definition, dependencies } = createGraphQLList({
-    name,
-    value,
-    moduleMap,
-  });
-
-  return {
-    name,
-    value,
-    parent,
-    definition,
-    dependencies,
-  }
-};
 
 export default class GraphQLBuilder {
   constructor(node) {
@@ -145,6 +64,10 @@ export default class GraphQLBuilder {
           parent: this._visitor,
         });
 
+        if (typeof field.type === 'undefined') {
+          console.log(field);
+        }
+
         this._visitor.fields = this._visitor.fields.concat(field);
         this._visitor.dependencies = this._visitor.dependencies.concat(
           {
@@ -191,7 +114,6 @@ export default class GraphQLBuilder {
       name,
       fields: GraphQLFields,
     });
-
     this._visitor = parent;
   }
 

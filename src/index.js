@@ -21,8 +21,14 @@ const response = {
     // bar: ['a', 'b', 'c'],
   // },
 };
-console.log(JSON.stringify(response, null, 2));
-// const visitor = new GraphQLBuilder(response);
+// console.log(JSON.stringify(response, null, 2));
+const visitor = new GraphQLBuilder(response);
+
+// Object.keys(visitor._moduleMap).forEach((m) => {
+  // console.log(m);
+  // console.log(visitor._moduleMap[m].dependencies);
+// });
+
 
 // import generate from 'babel-generator';
 // const files = visitor.schema.map((type) => {

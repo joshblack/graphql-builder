@@ -11,7 +11,7 @@ export const scaffold = (types, destination) => {
   const files = types.map((type) => {
     const { name, program } = type;
     const { code } = generate(program, {
-      quotes: 'single'
+      quotes: 'single',
     });
 
     return {

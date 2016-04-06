@@ -21,4 +21,9 @@ export const inferGraphQLScalarTypeFrom = (value) => {
   if (isString(value)) {
     return 'GraphQLString';
   }
+
+  // Coerce to string :/
+  if (value instanceof Date) {
+    return 'GraphQLString';
+  }
 };
