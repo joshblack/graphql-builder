@@ -31,7 +31,7 @@ export function getListType({ moduleMap, name, value }) {
         source: `./${itemName}`,
       });
 
-      return acc.concat(itemName);
+      return acc.concat(`${itemName}Type`);
     } else if (Array.isArray(item)) {
       invariant(
         'Nested lists inside of lists is not currently supported in the ' +
@@ -75,7 +75,7 @@ export function createGraphQLList({ moduleMap, name, value }) {
         t.identifier('type'),
         t.NewExpression(
           t.identifier('GraphQLList'),
-          [t.identifier(`${type}Type`)],
+          [t.identifier(type)],
         ),
       ),
       t.objectProperty(

@@ -1,6 +1,5 @@
-import * as t from 'babel-types';
+import { Program, exportNamedDeclaration } from 'babel-types';
 import { isPlainObject } from 'lodash';
-import invariant from 'fbjs/lib/invariant';
 
 import { createGraphQLPrimitive } from './createGraphQLPrimitive';
 import { createImportSpecifiers } from './createImportSpecifiers';
@@ -51,22 +50,11 @@ export default class GraphQLBuilder {
           field.dependencies,
         );
       } else {
-        invariant(
-          this._visitor.type === 'GraphQLObjectType',
-          'Undesired state, current visitor is not a GraphQLObject, instead ' +
-          'it is: %s',
-          this._visitor.type,
-        );
-
         const field = primitiveNode({
           name: key,
           value,
           parent: this._visitor,
         });
-
-        if (typeof field.type === 'undefined') {
-          console.log(field);
-        }
 
         this._visitor.fields = this._visitor.fields.concat(field);
         this._visitor.dependencies = this._visitor.dependencies.concat(
@@ -124,9 +112,9 @@ export default class GraphQLBuilder {
 
         return {
           name,
-          program: t.Program([
+          program: Program([
             ...createImportSpecifiers({ dependencies }),
-            t.exportNamedDeclaration(definition, []),
+            exportNamedDeclaration(definition, []),
           ]),
         };
       });

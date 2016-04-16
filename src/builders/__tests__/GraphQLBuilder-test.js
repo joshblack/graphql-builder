@@ -2,6 +2,8 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import GraphQLBuilder from '../GraphQLBuilder';
 
+import generate from 'babel-generator';
+
 describe('GraphQLBuilder', () => {
   it('should build one module for a response with single-level depth', () => {
     const response = {
@@ -56,14 +58,44 @@ describe('GraphQLBuilder', () => {
   });
 
   it('should work with lists of primitives in the response', () => {
-    // const response = {
-      // foo: {
-        // bar: [1, 2, 3],
-      // },
-    // };
+    const response = {
+      user: {
+        aliases: ['Josh', 'Abbey', 'Sora'],
+      },
+    };
 
-    // const builder = new GraphQLBuilder(response);
+    const builder = new GraphQLBuilder(response);
+    const schema = builder._schema;
+
+    const { fields } = schema;
+    const [userField] = fields;
+
+    expect(userField.name).to.equal('user');
+    expect(userField.type).to.equal('GraphQLObjectType');
+
+    const [aliasesField] = userField.fields;
+
+    expect(aliasesField.name).to.equal('aliases');
+    expect(aliasesField.type).to.equal('GraphQLList');
   });
 
-  it('should resolve lists that refer to the same type');
+  it('should resolve lists that refer to the same type', () => {
+    const response = {
+      visitor: {
+        user: {
+          name: 'Josh',
+          friends: [
+            { name: 'Abbey' },
+            { name: 'Lee Byron' },
+          ],
+        },
+      },
+    };
+
+    const builder = new GraphQLBuilder(response);
+    const schema = builder._schema;
+    const { fields } = schema;
+    const [visitor] = fields;
+    const [userField, friendsField] = visitor.fields;
+  });
 });

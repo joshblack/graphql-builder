@@ -5,21 +5,25 @@ import {
   isBoolean,
 } from 'lodash';
 
+const inferGraphQLNumericType = (value) => {
+  if (isInteger(value)) {
+    return 'GraphQLInt';
+  };
+
+  return 'GraphQLFloat';
+};
+
 export const inferGraphQLScalarTypeFrom = (value) => {
   if (isNumber(value)) {
-    if (isInteger(value)) {
-      return 'GraphQLInt';
-    };
-
-    return 'GraphQLFloat';
-  }
-
-  if (isBoolean(value)) {
-    return 'GraphQLBoolean';
+    return inferGraphQLNumericType(value);
   }
 
   if (isString(value)) {
     return 'GraphQLString';
+  }
+
+  if (isBoolean(value)) {
+    return 'GraphQLBoolean';
   }
 
   // Coerce to string :/

@@ -3,6 +3,20 @@ import faker from 'faker';
 import GraphQLBuilder from './builders/GraphQLBuilder';
 import { scaffold } from './scaffold';
 
+visitURLs([
+  'someurl',
+  {
+    uri: 'someurl',
+    username: 'user',
+    password: 'pass',
+  },
+  {
+    uri: 'someuri',
+    token: 'asdf',
+  },
+]);
+
+
   // user: {
     // friends: [user]
     // name: faker.name.findName(),
@@ -21,31 +35,9 @@ const response = {
     // bar: ['a', 'b', 'c'],
   // },
 };
-// console.log(JSON.stringify(response, null, 2));
+
 const visitor = new GraphQLBuilder(response);
+scaffold(visitor.schema, path.resolve(__dirname, '../project'));
 
-// Object.keys(visitor._moduleMap).forEach((m) => {
-  // console.log(m);
-  // console.log(visitor._moduleMap[m].dependencies);
-// });
-
-
-// import generate from 'babel-generator';
-// const files = visitor.schema.map((type) => {
-  // const { name, program } = type;
-  // const { code } = generate(program, {
-    // quotes: 'single'
-  // });
-
-  // return {
-    // name,
-    // source: code,
-  // };
-// });
-
-// files.forEach((file) => {
-  // console.log(file.source);
-// });
-
-// scaffold(visitor.schema, path.resolve(__dirname, '../project'));
+console.log('done');
 
